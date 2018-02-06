@@ -2,6 +2,9 @@
 *.aux
 *.log
 
+# graphicx output files for PostScript document inputs
+*-eps-converted-to.pdf
+
 # Vim swap files
 *.swp
 
