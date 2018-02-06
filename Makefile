@@ -26,7 +26,6 @@ printclean:
 .PHONY: print
 print: $(DOCUMENTS) printclean
 	$(foreach document,$(DOCUMENTS),\
-@find . -regex './$(basename $(document))\.[1-9][0-9]*\.pdf' -delete;\
 for ((_PageNumber = 1; _PageNumber <= $$(\
 gs -q -dNODISPLAY -c\
 '($(document)) (r) file runpdfbegin pdfpagecount = quit'); ++_PageNumber));\
