@@ -1,0 +1,11 @@
+# non-PDF LaTeX output files
+*.aux
+*.log
+
+# Vim swap files
+*.swp
+
+# minted output files
+/_minted-hello-world/*
+
+/hello-world.pdf
