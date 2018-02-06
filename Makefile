@@ -15,12 +15,14 @@ SHELL := /bin/bash
 
 SOURCES := hello_world.tex
 
+hello_world_INPUTS := helloworld.py
+
 .SECONDEXPANSION:
 .PHONY: all
 all: $$(DOCUMENTS)
 
 define document_rule =
-$(2): $(1)
+$(2): $(1) $$($(basename $(1))_INPUTS)
 DOCUMENTS += $(2)
 endef
 
