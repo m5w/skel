@@ -11,48 +11,69 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+define \n
+
+
+endef
+
 SHELL := /bin/bash
 
-SOURCES := hello_world.tex
+SOURCES :=\
+hello_world.tex\
+plot.tex
 
-hello_world_INPUTS := helloworld.py
+hello_world_LISTING_INPUTS :=\
+helloworld.py
+
+plot_LISTING_INPUTS :=\
+makePlot.m
+plot_FIGURE_INPUTS :=\
+plot.eps
 
 .SECONDEXPANSION:
 .PHONY: all
 all: $$(DOCUMENTS)
 
 define document_rule =
-$(2): $(1) $$($(basename $(1))_INPUTS)
-DOCUMENTS += $(2)
+$(3): $(1) $$($(2)_LISTING_INPUTS) $$($(4))
+DOCUMENTS += $(3)
+FIGURE_INPUTS += $$($(4))
 endef
 
 $(foreach source,$(SOURCES),\
 $(eval\
-$(call document_rule,$(source),$(subst _,-,$(basename $(source))).pdf)))
+$(call\
+document_rule,$(source),$(basename\
+$(source)),$(subst\
+_,-,$(basename $(source))).pdf,$(basename\
+$(source))_FIGURE_INPUTS)))
 
 $(DOCUMENTS):
 	pdflatex -jobname $(basename $@) -shell-escape $<
 
 .PHONY: printclean
 printclean:
-	$(foreach document,$(DOCUMENTS),\
-@find . -regex './$(basename $(document))\.[1-9][0-9]*\.pdf' -delete;)
+	$(foreach document,$(DOCUMENTS),@find\
+. -regex './$(basename $(document))\.[1-9][0-9]*\.pdf' -delete$(\n))
 
 .PHONY: print
 print: $(DOCUMENTS) printclean
-	$(foreach document,$(DOCUMENTS),\
-for ((_PageNumber = 1; _PageNumber <= $$(\
-gs -q -dNODISPLAY -c\
-'($(document)) (r) file runpdfbegin pdfpagecount = quit'); ++_PageNumber));\
+	$(foreach document,$(DOCUMENTS),@for\
+((_PageNumber = 1;\
+_PageNumber <= $$(gs\
+-q -dNODISPLAY -c\
+'($(document)) (r) file runpdfbegin pdfpagecount = quit');\
+++_PageNumber));\
 do\
 gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=pdfwrite\
 -dPageList="$$_PageNumber"\
 -sOutputFile="$(basename $(document)).$$_PageNumber.pdf" -q;\
-done)
+done$(\n))
 
 .PHONY: clean
 clean: printclean
 	@rm -r \
+$(FIGURE_INPUTS:.eps=-eps-converted-to.pdf) \
 $(DOCUMENTS:.pdf=.aux) \
 $(DOCUMENTS) \
 $(DOCUMENTS:.pdf=.log) \

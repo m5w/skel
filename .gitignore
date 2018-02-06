@@ -1,16 +1,16 @@
-# non-PDF LaTeX output files
-*.aux
-*.log
-
-# graphicx output files for PostScript document inputs
-*-eps-converted-to.pdf
-
 # Vim swap files
 *.swp
 
+# graphicx output files for PostScript document inputs
+/*-eps-converted-to.pdf
+
+# non-PDF LaTeX output files
+/*.aux
+/*.log
+
 # minted output files
-/_minted-hello-world/*
+/_minted-*/*
 
-/hello-world.pdf
+/*.pdf
 
-/hello-world.*.pdf
+/*.[1-9]*.pdf
