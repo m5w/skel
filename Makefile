@@ -65,9 +65,10 @@ _PageNumber <= $$(gs\
 '($(document)) (r) file runpdfbegin pdfpagecount = quit');\
 ++_PageNumber));\
 do\
-gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=pdfwrite\
--dPageList="$$_PageNumber"\
--sOutputFile="$(basename $(document)).$$_PageNumber.pdf" -q;\
+gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -dPageList="$$_PageNumber"\
+-sOutputFile="$(basename $(document)).$$_PageNumber.pdf"\
+-q\
+$(document);\
 done$(\n))
 
 .PHONY: clean
