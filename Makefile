@@ -85,15 +85,15 @@ _PageNumber <= $$(gs\
 '($(output)) (r) file runpdfbegin pdfpagecount = quit');\
 ++_PageNumber));\
 do\
-gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -dPageList="$$_PageNumber"\
+gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=pdfwrite\
+-dFirstPage="$$_PageNumber" -dLastPage="$$_PageNumber"\
 -sOutputFile="$(basename $(output)).$$_PageNumber.pdf"\
--q\
 $(output);\
 done$(\n))
 
 .PHONY: clean
 clean: printclean
-	@rm -r \
+	@rm -fr \
 $(RULES_OUTPUTS) \
 $(EPS_SOURCES:.eps=-eps-converted-to.pdf) \
 $(AUX_OUTPUTS) \
