@@ -18,18 +18,6 @@ endef
 
 SHELL := /bin/bash
 
-SOURCES :=\
-hello_world.tex\
-plot.tex
-
-hello_world_LISTING_INPUTS :=\
-helloworld.py
-
-plot_LISTING_INPUTS :=\
-makePlot.m
-plot_FIGURE_INPUTS :=\
-plot.eps
-
 .SECONDEXPANSION:
 .PHONY: all
 all: $$(DOCUMENTS)
