@@ -28,6 +28,8 @@ include sources.mk
 .PHONY: all
 all: $$(OUTPUTS)
 
+include rules.mk
+
 define output_rule_5
 $(4): $(1) $$($(2)_SOURCES) $$($(5))
 	pdflatex -jobname $(3) -shell-escape $(1)
@@ -92,10 +94,9 @@ done$(\n))
 .PHONY: clean
 clean: printclean
 	@rm -r \
+$(RULES_OUTPUTS) \
 $(EPS_SOURCES:.eps=-eps-converted-to.pdf) \
 $(AUX_OUTPUTS) \
 $(OUTPUTS) \
 $(LOG_OUTPUTS) \
 $(_MINTED_OUTPUTS)
-
-include rules.mk
