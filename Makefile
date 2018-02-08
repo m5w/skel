@@ -32,6 +32,8 @@ all: $$(OUTPUTS)
 
 define output_rule_5
 $(4): $(1) $$($(2)_SOURCES) $$($(5))
+	pdflatex -jobname $(3) -shell-escape $(1)
+
 OUTPUTS += $(4)
 EPS_SOURCES += $$($(5))
 endef
@@ -65,9 +67,6 @@ $(foreach source,$(SOURCES),\
 $(eval\
 $(call\
 output_rule,$(source))))
-
-$(OUTPUTS):
-	pdflatex -jobname $(basename $@) -shell-escape $<
 
 .PHONY: printclean
 printclean:
