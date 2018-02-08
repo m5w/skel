@@ -22,13 +22,7 @@ endef
 
 SHELL := /bin/bash -o pipefail
 
-SOURCES :=\
-plot.tex
-
-plot_SOURCES :=\
-makePlot.m
-plot_EPS_SOURCES :=\
-plot.eps
+include sources.mk
 
 .SECONDEXPANSION:
 .PHONY: all
@@ -40,6 +34,9 @@ $(4): $(1) $$($(2)_SOURCES) $$($(5))
 
 OUTPUTS += $(4)
 EPS_SOURCES += $$($(5))
+AUX_OUTPUTS += $(3:=.aux)
+LOG_OUTPUTS += $(3:=.log)
+_MINTED_OUTPUTS += $(addprefix _minted-,$(3))
 endef
 
 define output_rule_4
@@ -96,7 +93,9 @@ done$(\n))
 clean: printclean
 	@rm -r \
 $(EPS_SOURCES:.eps=-eps-converted-to.pdf) \
-$(OUTPUTS:.pdf=.aux) \
+$(AUX_OUTPUTS) \
 $(OUTPUTS) \
-$(OUTPUTS:.pdf=.log) \
-$(addprefix _minted-,$(basename $(OUTPUTS)))
+$(LOG_OUTPUTS) \
+$(_MINTED_OUTPUTS)
+
+include rules.mk
