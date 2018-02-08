@@ -54,7 +54,7 @@ endef
 
 define output_rule_2
 $(call\
-output_rule_3,$(1),$(2),$(subst _,-,$(1)))
+output_rule_3,$(1),$(2),$(subst _,-,$(2)))
 endef
 
 define output_rule_1
@@ -79,7 +79,7 @@ printclean:
 
 .PHONY: print
 print: $(OUTPUTS) printclean
-	$(foreach output,$(OUTPUTS),@for\
+	$(foreach output,$(OUTPUTS),for\
 ((_PageNumber = 1;\
 _PageNumber <= $$(gs\
 -q -dNODISPLAY -c\
