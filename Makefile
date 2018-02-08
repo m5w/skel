@@ -16,79 +16,84 @@ define \n
 
 endef
 
-SHELL := /bin/bash
+SHELL := /bin/bash -o pipefail
 
 SOURCES :=\
 plot.tex
 
-plot_LISTING_INPUTS :=\
+plot_SOURCES :=\
 makePlot.m
-plot_FIGURE_INPUTS :=\
+plot_EPS_SOURCES :=\
 plot.eps
 
 .SECONDEXPANSION:
 .PHONY: all
-all: $$(DOCUMENTS)
+all: $$(OUTPUTS)
 
-define document_rule_4
-$(4): $(1) $$($(2)_LISTING_INPUTS) $$($(5))
-DOCUMENTS += $(4)
-FIGURE_INPUTS += $$($(5))
+define output_rule_5
+$(4): $(1) $$($(2)_SOURCES) $$($(5))
+OUTPUTS += $(4)
+EPS_SOURCES += $$($(5))
 endef
 
-define document_rule_3
+define output_rule_4
 $(call\
-document_rule_4,$(1),$(2),$(3),$(3:=.pdf),$(2)_FIGURE_INPUTS)
+output_rule_5,$(1),$(2),$(3),$(4),$(2)_EPS_SOURCES)
 endef
 
-define document_rule_2
+define output_rule_3
 $(call\
-document_rule_3,$(1),$(2),$(subst _,-,$(1)))
+output_rule_4,$(1),$(2),$(3),$(3:=.pdf))
 endef
 
-define document_rule_1
+define output_rule_2
 $(call\
-document_rule_2,$(1),$(basename $(1)))
+output_rule_3,$(1),$(2),$(subst _,-,$(1)))
 endef
 
-define document_rule
+define output_rule_1
 $(call\
-document_rule_1,$(1))
+output_rule_2,$(1),$(basename $(1)))
+endef
+
+define output_rule
+$(call\
+output_rule_1,$(1))
 endef
 
 $(foreach source,$(SOURCES),\
 $(eval\
 $(call\
-document_rule,$(source))))
+output_rule,$(source))))
 
-$(DOCUMENTS):
+$(OUTPUTS):
 	pdflatex -jobname $(basename $@) -shell-escape $<
 
 .PHONY: printclean
 printclean:
-	$(foreach document,$(DOCUMENTS),@find\
-. -regex './$(basename $(document))\.[1-9][0-9]*\.pdf' -delete$(\n))
+	$(foreach output,$(OUTPUTS),@find\
+. -regex './$(basename $(output))\.[1-9][0-9]*\.pdf' -delete$(\n))
 
 .PHONY: print
-print: $(DOCUMENTS) printclean
-	$(foreach document,$(DOCUMENTS),@for\
+print: $(OUTPUTS) printclean
+	$(foreach output,$(OUTPUTS),@for\
 ((_PageNumber = 1;\
 _PageNumber <= $$(gs\
 -q -dNODISPLAY -c\
-'($(document)) (r) file runpdfbegin pdfpagecount = quit');\
+'($(output)) (r) file runpdfbegin pdfpagecount = quit');\
 ++_PageNumber));\
 do\
 gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -dPageList="$$_PageNumber"\
--sOutputFile="$(basename $(document)).$$_PageNumber.pdf"\
+-sOutputFile="$(basename $(output)).$$_PageNumber.pdf"\
 -q\
-$(document);\
+$(output);\
 done$(\n))
 
 .PHONY: clean
 clean: printclean
 	@rm -r \
-$(FIGURE_INPUTS:.eps=-eps-converted-to.pdf) \
-$(DOCUMENTS:.pdf=.aux) \
-$(DOCUMENTS) \
-$(DOCUMENTS:.pdf=.log) \
-$(addprefix _minted-,$(basename $(DOCUMENTS)))
+$(EPS_SOURCES:.eps=-eps-converted-to.pdf) \
+$(OUTPUTS:.pdf=.aux) \
+$(OUTPUTS) \
+$(OUTPUTS:.pdf=.log) \
+$(addprefix _minted-,$(basename $(OUTPUTS)))
