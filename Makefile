@@ -18,23 +18,48 @@ endef
 
 SHELL := /bin/bash
 
+SOURCES :=\
+plot.tex
+
+plot_LISTING_INPUTS :=\
+makePlot.m
+plot_FIGURE_INPUTS :=\
+plot.eps
+
 .SECONDEXPANSION:
 .PHONY: all
 all: $$(DOCUMENTS)
 
-define document_rule =
-$(3): $(1) $$($(2)_LISTING_INPUTS) $$($(4))
-DOCUMENTS += $(3)
-FIGURE_INPUTS += $$($(4))
+define document_rule_4
+$(4): $(1) $$($(2)_LISTING_INPUTS) $$($(5))
+DOCUMENTS += $(4)
+FIGURE_INPUTS += $$($(5))
+endef
+
+define document_rule_3
+$(call\
+document_rule_4,$(1),$(2),$(3),$(3:=.pdf),$(2)_FIGURE_INPUTS)
+endef
+
+define document_rule_2
+$(call\
+document_rule_3,$(1),$(2),$(subst _,-,$(1)))
+endef
+
+define document_rule_1
+$(call\
+document_rule_2,$(1),$(basename $(1)))
+endef
+
+define document_rule
+$(call\
+document_rule_1,$(1))
 endef
 
 $(foreach source,$(SOURCES),\
 $(eval\
 $(call\
-document_rule,$(source),$(basename\
-$(source)),$(subst\
-_,-,$(basename $(source))).pdf,$(basename\
-$(source))_FIGURE_INPUTS)))
+document_rule,$(source))))
 
 $(DOCUMENTS):
 	pdflatex -jobname $(basename $@) -shell-escape $<
