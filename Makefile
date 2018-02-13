@@ -33,6 +33,7 @@ include rules.mk
 define output_rule_5
 $(4): $(1) $$($(2)_SOURCES) $$($(5))
 	pdflatex -jobname $(3) -shell-escape $(1)
+	pdflatex -jobname $(3) -shell-escape $(1)
 
 OUTPUTS += $(4)
 EPS_SOURCES += $$($(5))
