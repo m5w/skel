@@ -1,7 +1,7 @@
 SOURCES :=\
-plot.tex
+report.tex
 
-plot_SOURCES :=\
-makePlot.m
-plot_EPS_SOURCES :=\
+report_SOURCES :=\
+makeReport.m
+report_EPS_SOURCES :=\
 plot.eps

@@ -1,0 +1,33 @@
+\documentclass{article}
+
+\usepackage[margin = 1.0 in]{geometry}
+
+\usepackage[fleqn]{amsmath}
+\usepackage{dsfont}
+
+\usepackage{siunitx}
+
+\usepackage{float}
+
+\usepackage{minted}
+
+\usepackage{graphicx}
+
+\begin{document}
+\newlength{\reparindent}
+\setlength{\reparindent}{\parindent}
+\raggedright
+\setlength{\parindent}{\reparindent}
+\section*{Part 0.1}
+
+See figure \ref{fig:plot}.
+
+\begin{figure}
+\includegraphics[width = \linewidth]{plot.eps}
+
+\caption{A plot.}
+
+\label{fig:plot}
+\end{figure}
+\inputminted{matlab}{makeReport.m}
+\end{document}
